@@ -69,9 +69,20 @@ public class WebSocketSampler extends AbstractSampler implements TestStateListen
 
         String connectionId = getThreadName() + getConnectionId();
         
+        // Get the existing socket for this client
         if (isStreamingConnection() && connectionList.containsKey(connectionId)) {
         	ServiceSocket socket = connectionList.get(connectionId);
             socket.initialize();
+
+            // use new response and disconnect patterns if overriden
+            if (this.isOverrideResponsePattern()) {
+                socket.setResponsePattern(this.getResponsePattern());
+            }
+            
+            if (this.isOverrideDisconnectPattern()) {
+                socket.setDisconnectPattern(this.getCloseConncectionPattern());
+            }
+            
             return socket;
         }
         
@@ -383,6 +394,22 @@ public class WebSocketSampler extends AbstractSampler implements TestStateListen
             return getPropertyAsString("closeConncectionPattern");
     }
 
+    void setOverrideResponsePattern(Boolean overrideResponsePattern) {
+        setProperty("isOverrideResponsePattern", overrideResponsePattern);
+    }
+    
+    Boolean isOverrideResponsePattern() {
+        return getPropertyAsBoolean("isOverrideResponsePattern", false);
+    }
+
+    void setOverrideDisconnectPattern(Boolean overrideDisconnectPattern) {
+        setProperty("isOverrideDisconnectPattern", overrideDisconnectPattern);
+    }
+
+    Boolean isOverrideDisconnectPattern() {
+        return getPropertyAsBoolean("isOverrideDisconnectPattern", false);
+    }
+    
     public void setProxyAddress(String proxyAddress) {
             setProperty("proxyAddress", proxyAddress);
     }
@@ -499,7 +526,5 @@ public class WebSocketSampler extends AbstractSampler implements TestStateListen
             socket.close();
         }
     }
-
-
 
 }
