@@ -5,9 +5,8 @@
 package JMeter.plugins.functional.samplers.websocket;
 
 import java.io.IOException;
-import java.util.Deque;
-import java.util.Iterator;
 import java.util.Queue;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -185,7 +184,13 @@ public class ServiceSocket {
     }
 
     public void sendMessage(String message) throws IOException {
-        session.getRemote().sendString(message);
+        try {
+            session.getRemote().sendString(message);
+        } catch (NullPointerException e) {
+            logMessage.append(" - Got a Null Pointer Exception. Message: [")
+                    .append(e.getMessage()).append("].\n");
+            throw e;
+        }
     }
 
     public void close() {
