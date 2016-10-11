@@ -128,9 +128,8 @@ public class WebSocketSampler extends AbstractSampler implements TestStateListen
         //Set the message payload in the Sampler
         StringBuilder requestData = new StringBuilder();
         
-        String uri = "";
         try {
-            uri = getUri().toString();
+            String uri = getUri().toString();
             requestData.append("GET ")
                 .append(uri)
                 .append("\n\n");
