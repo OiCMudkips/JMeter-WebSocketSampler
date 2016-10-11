@@ -126,8 +126,23 @@ public class WebSocketSampler extends AbstractSampler implements TestStateListen
         boolean isOK = false;
 
         //Set the message payload in the Sampler
+        StringBuilder requestData = new StringBuilder();
+        
+        String uri = "";
+        try {
+            uri = getUri().toString();
+            requestData.append("GET ")
+                .append(uri)
+                .append("\n\n");
+        }
+        catch (URISyntaxException e) {
+            // Do nothing for now; it'll get logged later
+        }
+        
         String payloadMessage = getRequestPayload();
-        sampleResult.setSamplerData(payloadMessage);
+        requestData.append(payloadMessage);
+        
+        sampleResult.setSamplerData(requestData.toString());
         
         //Could improve precission by moving this closer to the action
         sampleResult.sampleStart();
